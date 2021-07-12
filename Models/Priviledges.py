@@ -1,3 +1,5 @@
+from Controllers.Database import Database
+
 class Priviledge:
     id = type(int)
     name = type(str)
@@ -6,40 +8,20 @@ class Priviledge:
         self.id = id
         self.name = name
 
-        def database(self):
-            """"function used to create database (resources.db)"""
-            connect = self.connect()
-            setcursor = connect.cursor()
-            setcursor.execute(
-                '''CREATE TABLE Clients ([id] INTEGER PRIMARY KEY, [fullname] VARCHAR[75], [adress] VARCHAR[50], [email] VARCHAR[50], [phone] VARCHAR[8])''')
-            # rows admins
-            setcursor.execute(
-                '''CREATE TABLE Admins ([id] INTEGER PRIMARY KEY, [level] INTEGER, [username] VARCHAR[20], [password] VARCHAR[50])''')
-            connect.commit()
-            connect.close()
-
-        def addsuperadmin(self):
-            """"function used to add superadmin"""
-            connect = self.connect()
-            connect[1].execute('''INSERT INTO Admins(level, username, password) VALUES (1, "superadmin", "Admin!23")''')
-            self.saveandclose(connect[0])
-
-        def deleteuser(self, user, passwd):
-            """"delete a admin/user from the system | can only be done by the superadmin and system admins"""
-            connect = self.connect()
-            query = 'DELETE FROM Admins WHERE username = ?'
-            connect[1].execute(query, (user,))
-            self.saveandclose(connect[0])
-
-        def getalladmins(self):
-            """"get all admins/users from the application"""
-            connect = self.connect()
-            connect[1].execute('''SELECT * FROM Admins''')
-            return connect[1].fetchall()
+    def database(self):
+        """"function used to create database (resources.db)"""
+        connect = Database().connect()
+        """command used to create priviledge table"""
+        #connect[0].execute('''CREATE TABLE priviledge(id INTEGER PRIMARY KEY AUTOINCREMENT, name CHAR(50))''')
+        """command used to create rol table"""
+        #connect[0].execute('''CREATE TABLE role(id INTEGER PRIMARY KEY AUTOINCREMENT, name CHAR(15))''')
+        """command used to create pivot table for roles and priviledges"""
+        #connect[0].execute('''CREATE TABLE rights(id INTEGER PRIMARY KEY AUTOINCREMENT, role_id INTEGER, priv_id INTEGER , FOREIGN KEY(role_id) REFERENCES role(id), FOREIGN KEY(priv_id) REFERENCES priviledge(id) )''')
+        """command used to create the people table for client and admin data"""
+        #connect[0].execute('''CREATE TABLE people(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(25), surname VARCHAR(30), adres VARCHAR(75), email VARCHAR(100), username VARCHAR(20), pwd VARCHAR(30), registration_date VARCHAR(10), role_id INTEGER, FOREIGN KEY(role_id) REFERENCES role(id))''')
+        Database().saveandclose(connect)
 
     def execute(self, commands):
         option = []
         for key in commands.keys():
             option.append(key)
-
-

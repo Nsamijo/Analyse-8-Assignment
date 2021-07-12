@@ -1,5 +1,4 @@
 import sqlite3
-import os
 
 
 class Database:
@@ -15,5 +14,3 @@ class Database:
     def saveandclose(self, connection):
         connection[0].commit()
         self.nuke(connection)
-
-
