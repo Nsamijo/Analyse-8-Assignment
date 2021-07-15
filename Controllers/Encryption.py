@@ -28,9 +28,11 @@ class Encryption:
 
     def encrypt(self, elements, type, decrypt=False):
         """"Encrypt data"""
+        if isinstance(elements, str):
+            return self.blackmagic(elements, type, decrypt)
         encrypted = []
-        for key in elements:
-            encrypted.append(self.blackmagic(elements, type, decrypt))
+        for value in elements:
+            encrypted.append(self.blackmagic(value, type, decrypt))
         return encrypted
 
     def decrypt(self, elements, type):

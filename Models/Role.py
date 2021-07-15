@@ -8,10 +8,10 @@ class Role:
         self.id = id
         self.name = name
 
-    def getPriviledges(self):
+    def getPriviledges(self, role_id):
         """"get all priviledges from a role"""
         connect = db().connect()
-        connect[1].execute('''SELECT * FROM Priviledges WHERE(SELECT * FROM Pivot WHERE roleid = ?), (id,)''')
+        connect[1].execute('''SELECT * FROM Priviledges WHERE(SELECT * FROM rights WHERE roleid = ?), (id,)''')
         results = connect[1].fetchall()
         db().saveandclose(connect)
         return results
