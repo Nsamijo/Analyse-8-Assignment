@@ -7,6 +7,8 @@ class Encryption:
 
     def blackmagic(self, value, sort, decrypt=False):
         """"transform the value with the power of black magic | shift chars to different position"""
+        if value == None: return value
+        if isinstance(value, int): return value
         shift = 0
         result = ''
         # read the shift key in
@@ -17,7 +19,7 @@ class Encryption:
             shift = -(shift)
         # black magic | iterate over the entire string and encrypt/decrypt
         for x in value:
-            if x == ' ':
+            if x in "!@$%#&/:.?()=,*_[]~^-+`|\{};'<>" or x.isdigit() or x == ' ':
                 result += x
             # check for uppercase | different char positions | A has pos 65 and a has pos 97
             elif x.isupper():
@@ -28,11 +30,17 @@ class Encryption:
 
     def encrypt(self, elements, type, decrypt=False):
         """"Encrypt data"""
-        if isinstance(elements, str):
-            return self.blackmagic(elements, type, decrypt)
+        #return int of value is a int
+        if isinstance(elements, int): return elements
+        #return string
+        if isinstance(elements, str): return self.blackmagic(elements, type, decrypt)
         encrypted = []
         for value in elements:
-            encrypted.append(self.blackmagic(value, type, decrypt))
+            if isinstance(value, tuple):
+                for attr in value:
+                    encrypted.append(self.blackmagic(attr, type, decrypt))
+            else:
+                encrypted.append(self.blackmagic(value, type, decrypt))
         return encrypted
 
     def decrypt(self, elements, type):

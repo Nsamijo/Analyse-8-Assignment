@@ -1,14 +1,15 @@
+from CDMS import cdms
 from Controllers.Encryption import Encryption
 from Models.Priviledges import Priviledge as pv
 
 
+def split_list(alist):
+    length = len(alist)
+    wanted_parts = len(alist) // 3
+    return [alist[i * length // wanted_parts: (i + 1) * length // wanted_parts] for i in range(wanted_parts)]
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    database = pv(0, 'data')
-    database.deleteRoles()
-    database.updateRole()
-    roles = database.getRoles()
-    for x in roles:
-        print(Encryption().decrypt(x[1], 'role'))
+    system = cdms()
+    while not system.Stop:
+        system.execute()
