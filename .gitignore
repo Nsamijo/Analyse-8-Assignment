@@ -2,4 +2,5 @@
 /venv/
 .idea/
 .vs/
+.vscode/
 __pycache__
