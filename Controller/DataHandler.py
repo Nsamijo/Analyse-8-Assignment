@@ -36,6 +36,13 @@ class Datahandler:
         self.db = Database().connect()
         self.rows = Database().rows
 
+    def getclients(self):
+        data = self.getPeople()
+        for x in data:
+            if x['priviledge'] != 4:
+                data.remove(x)
+        return data
+
     def getPeople(self):
         '''GET ALL PEOPLE IN THE SYSTEM'''
         people = []

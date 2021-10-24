@@ -12,14 +12,14 @@ class Advisor:
     option = None
     specialChars = "!@$%#&/:.?()=,*_[]~^-+`|\{};'<>"
 
-    def clear(self):
-        print(50 * "\n")
-
     def __init__(self, user: dict, person: dict):
         self.user = user
         self.person = Person()
         self.person.setData(person)
         self.dh = Datahandler()
+
+    def clear(self):
+        print(50 * "\n")
 
     def choices(self):
         '''PRINT ALL OPTIONS FOR ADVISOR'''

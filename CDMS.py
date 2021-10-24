@@ -1,4 +1,5 @@
 from Controller.Advisor import Advisor
+from Controller.Sysadmin import Administrator
 from Models.Person import *
 from Models.Privilege import *
 from Controller.DataHandler import Datahandler
@@ -51,6 +52,6 @@ class CDMS:
                 if Privilege(person['priviledge']) == Privilege.ADVISOR:
                     self.user = Advisor(self.user, person)
                 elif Privilege(person['priviledge']) == Privilege.SYSTEM_ADMINISTRATOR:
-                    print(f'Logged in as System Administrator')
-                    quit()
-                self.user = self.user.menu()
+                    self.user = Administrator(self.user, person)
+                    self.user.clients()
+                # self.user = self.user.menu()
