@@ -1,0 +1,5 @@
+############### CODE USED TO CREATE DATABASE ######################
+
+create table people( id integer PRIMARY KEY AUTOINCREMENT, firstName varchar[20], lastName varchar[50], streetName VARCHAR[75], houseNumber varchar[5], zipCode varchar[10], city integer, email  VARCHAR[100], phoneNumber varchar[10], priviledge integer);
+
+create table users( pid integer, username varchar[20], password varchar[30], FOREIGN KEY(pid) REFERENCES people(id));

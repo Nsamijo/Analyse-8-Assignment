@@ -1,54 +1,77 @@
-from datetime import datetime
-from Controllers.Encryption import Encryption
+from Models.Privilege import Privilege
 
-class Client:
-    id = type(int)
-    name = ""
-    surname = ""
-    adres = ""
+
+class Person:
+    id = ""
+    firstName = ""
+    lastName = ""
+    streetName = ""
+    houseNumber = ""
+    zipCode = ""
+    city = ""
     email = ""
-    username = ""
-    password = ""
-    registrationdate = ""
-    role_id = type(int)
-    mobileNumber = ""
+    phoneNumber = ""
+    privilege = None
 
     def __init__(self):
-        self.id = None
+        ''''SET PRIVILEDGE ON INIT'''
+        self.privilege = Privilege.CLIENT
 
-    def __init__(self, data):
-        self.id = data[0]
-        self.name = data[1]
-        self.surname = data[2]
-        self.adres = data[3]
-        self.email = data[4]
-        self.username = data[5]
-        self.password = data[6]
-        self.registrationdate= data[7]
-        self.role_id = data[8]
-        self.mobileNumber = data[9]
+    def getFullName(self):
+        ''''GET FULL NAME OF PERSON'''
+        return f'{self.firstName} {self.lastName}'
 
-    def now(self):
-        return datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    def getAddress(self):
+        ''''GET FULL ADDRESS OF PERSON'''
+        return f'{self.streetName} {self.houseNumber} {self.zipCode} {self.city}'
+
+    def getPriviledge(self):
+        ''''GET PRIVILEDGE LEVEL OF PERSON'''
+        if self.privilege == Privilege.SUPER_ADMINISTRATOR:
+            return ['SUPER ADMIN', 1]
+        elif self.privilege == Privilege.SYSTEM_ADMINISTRATOR:
+            return ['SYSTEM ADMIN', 2]
+        elif self.privilege == Privilege.ADVISOR:
+            return ['ADVISOR', 3]
+        return ['CLIENT', 4]
+
+    def getPerson(self):
+        return self.__dict__
+
+    def setData(self, persondict):
+        self.__dict__ = persondict
 
 
-    def fullName(self):
-        ''''get the full name from client'''
-        return self.name + self.surname
 
-    def setNumber(self, nr):
-        ''''set mobile number of client'''
-        if len(nr) != 8 : return False
-        self.mobileNumber = nr; return True
+class Advisor(Person):
+####ADVISOR: HANDLES CLIENTS####
+    pid = None
+    username = ""
+    password = ""
+    def __init__(self):
+        Person.__init__(self)
+        self.privilege = Privilege.ADVISOR
 
-    def setName(self, name, first = True):
-        ''''set first or surname of client'''
-        if first: self.name = name; return
-        self.surname = name
+    def dictUser(self):
+        return self.__dict__
 
-    def setEmail(self, email):
-        ''''set email of client'''
-        self.email = email
+    def setUser(self, user):
+        self.__dict__ = user
 
-    def getsqlformat(self):
-        return Encryption().encrypt([self.name, self.surname, self.adres, self.email, self.username, self.password, self.now(), self.role_id, self.mobileNumber], 'person')
+
+class SystemAdmin(Advisor):
+####SYSTEM ADMININISTRATOR: HANDLES ADVISORS AND CLIENTS####
+
+    def __init__(self):
+        Advisor.__init__(self)
+        self.privilege = Privilege.SYSTEM_ADMINISTRATOR
+
+
+class SuperAdmin(Advisor):
+####HARDCODED SUPERADMIN AS STATED IN ASSIGNMENT: HANDLES SYSTEM ADMINISTRATORS, ADVISORS AND CLIENTS####
+
+    def __init__(self):
+        Advisor.__init__(self)
+        self.privilege = Privilege.SUPER_ADMINISTRATOR
+        self.username = 'superadmin'
+        self.password = 'Admin!23'

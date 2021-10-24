@@ -1,8 +1,0 @@
-resources:
-  keys:
-    role:
-      - 4
-    priviledge:
-      - 2
-    person:
-      - 3

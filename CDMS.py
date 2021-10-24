@@ -1,46 +1,56 @@
-import time
+from Controller.Advisor import Advisor
+from Models.Person import *
+from Models.Privilege import *
+from Controller.DataHandler import Datahandler
 
-from Controllers.Functionality import Functions
-import os
-
-from Models.Person import Client
-
-
-class cdms:
-    User = None
-    Stop = False
-    functions = None
-    Screen = 1
+class CDMS:
+    user = {}
+    exit = "EXIT"
+    choice = None
 
     def __init__(self):
-        self.functions = Functions()
+        self.dh = Datahandler()
+        self.super = SuperAdmin()
+        self.superadmin = False
 
-    def clearscreen(self):
-        os.system('cls')
+    def clear(self):
+        print(50 * "\n")
 
-    def login(self):
-        """log in with credentials | check if the given username and password are of correct type"""
-        username = input('Username >>> ')
-        while len(username) < 5:
-            username = input('Username [must have more than 5 characters]>>> ')
+    def getinput(self, instructions):
+        values = {}
+        for x in instructions:
+            values[x] = (input(f'{x} >>> '))
+        return values
 
-        pwd = input('Password >>> ')
-        while len(pwd) < 8:
-            pwd = input('Password [must have more than 8 characters]>>> ')
-        data = self.functions.login(username, pwd)
-        if data != None:
-            self.User = Client(data)
-        else:
-            print('Username or Password is incorrect.')
-            time.sleep(1.5)
-            self.clearscreen()
+    def header(self, messages: list):
+        self.clear()
+        print('Welcome to the CDMS by Nathan Samijo 0961962\nPlease Login to continue')
 
-    def startscreen(self):
-        print('Welcome to the Clients Data Management System (CDSM)!\nPlease Login in to access the functionality:')
+    def login(self, usr):
+        '''CHECK IF USER IS VALID'''
+        users = Datahandler().getUsers()
+        for user in users:
+            if usr['username'] == user['username'] and usr['password'] == user['password']:
+                return user
+            if usr['username'] == self.super.username and usr['password'] == self.super.password:
+                self.superadmin = True
+        return {}
 
     def execute(self):
-        if self.Screen == 1:
-            self.startscreen()
-            self.login()
-            if self.User != None:
-                self.Screen += 1
+        while self.choice != self.exit:
+            self.header(['Please login to continue'])
+            while self.user == {} and not self.superadmin:
+                self.user = self.login(self.getinput(["username", "password"]))
+
+            if self.superadmin:
+                print('Logged in as Super Admin')
+                quit()
+            else:
+                person = self.dh.getPerson(self.user['pid'])
+                #initialize users based on priviledge level
+                if Privilege(person['priviledge']) == Privilege.ADVISOR:
+                    self.user = Advisor(self.user, person)
+                elif Privilege(person['priviledge']) == Privilege.SYSTEM_ADMINISTRATOR:
+                    print(f'Logged in as System Administrator')
+                    quit()
+                self.user = self.user.menu()
