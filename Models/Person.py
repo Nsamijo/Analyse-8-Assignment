@@ -23,19 +23,28 @@ class Person:
 
     def getAddress(self):
         ''''GET FULL ADDRESS OF PERSON'''
+        # Goed gebruik van f-strings
         return f'{self.streetName} {self.houseNumber} {self.zipCode} {self.city}'
 
-    def getPriviledge(self):
+    def getPriviledge(self): # Houd je naming van Privilege consistent, privileDge is verkeerd gespeld.
         ''''GET PRIVILEDGE LEVEL OF PERSON'''
-        if self.privilege == Privilege.SUPER_ADMINISTRATOR:
-            return ['SUPER ADMIN', 1]
-        elif self.privilege == Privilege.SYSTEM_ADMINISTRATOR:
-            return ['SYSTEM ADMIN', 2]
-        elif self.privilege == Privilege.ADVISOR:
-            return ['ADVISOR', 3]
-        return ['CLIENT', 4]
 
-    def getPerson(self):
+        # Houd je code DRY (Don't Repeat Yourself)
+        if self.privilege is None:
+            pass # Doe iets om de None case af te handelen, mss [Privilege.CLIENT.name, Privilege.CLIENT.value]
+        else:
+            return [self.privilege.name, self.privilege.value]
+
+
+        # if self.privilege == Privilege.SUPER_ADMINISTRATOR:
+        #     return ['SUPER ADMIN', 1]
+        # elif self.privilege == Privilege.SYSTEM_ADMINISTRATOR:
+        #     return ['SYSTEM ADMIN', 2]
+        # elif self.privilege == Privilege.ADVISOR:
+        #     return ['ADVISOR', 3]
+        # return ['CLIENT', 4]
+
+    def getPerson(self): # Zou dit getData noemen, meer inline met je setData functie.
         return self.__dict__
 
     def setData(self, persondict):
@@ -44,14 +53,19 @@ class Person:
 
 
 class Advisor(Person):
+    """Docstrings zoe je met triple quotes"""
 ####ADVISOR: HANDLES CLIENTS####
     pid = None
     username = ""
     password = ""
     def __init__(self):
-        Person.__init__(self)
+        # Gebruik super() ipv person
+        # https://stackoverflow.com/a/576183
+        super().__init__()
+        # Person.__init__(self)
         self.privilege = Privilege.ADVISOR
 
+    # Deze twee functies doen hetzelfde als Person.getPerson en Person.setData
     def dictUser(self):
         return self.__dict__
 

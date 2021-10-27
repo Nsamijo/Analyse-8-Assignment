@@ -14,6 +14,8 @@ class Administrator:
     option = None
 
     def __init__(self, user: dict, person: dict):
+        # Je zet nu user naar de class 'dict'
+        # Vgm bedoel je dict()
         self.user = dict
         self.person = Person()
         self.person.setData(person)
