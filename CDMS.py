@@ -18,6 +18,8 @@ class CDMS:
         print(50 * "\n")
 
     def getinput(self, instructions):
+        # Het is duidelijk wat deze functie doet als je het leest,
+        # maar een comment met uitleg is toch handig.
         values = {}
         for x in instructions:
             values[x] = (input(f'{x} >>> '))
@@ -28,13 +30,20 @@ class CDMS:
         print('Welcome to the CDMS by Nathan Samijo 0961962\nPlease Login to continue')
 
     def login(self, usr):
+        # Je zou de parameter usr kunnen hernoemen naar credentials of cred, dat is logischer.
+        # Op dit moment is het namelijk nog geen user, het zijn login gegevens.
         '''CHECK IF USER IS VALID'''
         users = Datahandler().getUsers()
         for user in users:
             if usr['username'] == user['username'] and usr['password'] == user['password']:
                 return user
-            if usr['username'] == self.super.username and usr['password'] == self.super.password:
-                self.superadmin = True
+            # Als je ooit een geval tegen komt waarbij je if (condition) then return True/False
+            # krijgt, dan kan je het vervangen door gewoon de condition te returnen:
+            self.superadmin = usr['username'] == self.super.username and usr['password'] == self.super.password
+            # In veel gevallen maakt dit je code leesbaarder sneller, omdat branchen dmv een if-statement traag is.
+
+            # if usr['username'] == self.super.username and usr['password'] == self.super.password:
+            #     self.superadmin = True
         return {}
 
     def execute(self):
